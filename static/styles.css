@@ -1,0 +1,42 @@
+:root {
+    --yellow: #FFDD2D;
+    --black: #333;
+    --gray: #F5F5F5;
+    --green: #219653;
+    --red: #EB5757;
+}
+
+body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: var(--black); }
+header { background: var(--gray); padding: 15px; display: flex; align-items: center; }
+.logo-t { background: var(--yellow); width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-weight: bold; margin-right: 10px; }
+main { max-width: 480px; margin: 0 auto; padding: 20px; }
+
+.hidden { display: none !important; }
+.screen { display: flex; flex-direction: column; gap: 15px; }
+
+/* Login */
+.input-group input { width: 90%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 10px;}
+button { padding: 16px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; background: var(--yellow); width: 100%; }
+.login-footer { text-align: center; margin-top: 10px; color: #666; cursor: pointer; text-decoration: underline; font-size: 14px; }
+
+/* Cards */
+.status-card, .my-info-card, .current-card-admin { background: #FAFAFA; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #eee; }
+.ticket-display { font-size: 48px; font-weight: 900; margin: 10px 0; line-height: 1; }
+.ticket-badge { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+.ticket-badge .number { display: block; font-size: 40px; font-weight: bold; color: var(--black); }
+
+/* Telegram Promo */
+.tg-promo { background: #eefbfd; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; color: #2c8496; }
+
+/* Admin List */
+#admin-list { list-style: none; padding: 0; }
+.queue-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
+.t-number { font-weight: bold; background: var(--black); color: #fff; padding: 4px 8px; border-radius: 4px; margin-right: 10px; font-size: 14px; }
+.item-frozen { opacity: 0.6; background: #fcfcfc; }
+
+/* Controls */
+.controls, .admin-controls { display: flex; gap: 10px; }
+.btn-secondary { background: #eee; color: #333; }
+.btn-danger { background: #fcedec; color: var(--red); }
+.btn-primary { background: var(--black); color: #fff; }
+.btn-small { width: auto; padding: 8px 15px; background: transparent; border: 1px solid #ccc; }

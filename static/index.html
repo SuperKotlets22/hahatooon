@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Т-Очередь</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-t">T</div>
+            <span class="brand-name">Т-Банк & НГТУ</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Экран входа -->
+        <div id="login-screen" class="screen">
+            <h1>Электронная очередь</h1>
+            <p>Получите талон и следите за очередью онлайн</p>
+            
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Ваше имя" />
+            </div>
+
+            <!-- Скрытое поле для пароля админа -->
+            <div class="input-group hidden" id="admin-field">
+                <input type="password" id="password" placeholder="Пароль администратора" />
+            </div>
+
+            <button onclick="joinQueue()" id="join-btn">Получить талон</button>
+            
+            <div class="login-footer">
+                <span id="toggle-auth" onclick="toggleAdminMode()">Я организатор</span>
+            </div>
+        </div>
+
+        <!-- Экран участника -->
+        <div id="user-screen" class="screen hidden">
+            <div class="status-card">
+                <h3>Сейчас обслуживается:</h3>
+                <div id="current-serving-ticket" class="ticket-display">A-000</div>
+                <div id="current-serving-name" class="sub-text">Ожидание...</div>
+            </div>
+
+            <div class="my-info-card">
+                <div class="ticket-badge">
+                    <span class="label">ВАШ ТАЛОН</span>
+                    <span id="my-ticket" class="number">A-???</span>
+                </div>
+
+                <div class="tg-promo">
+                    <p>🔔 Хотите уведомление?</p>
+                    <p>Напишите боту <b id="bot-name">@MyBot</b> ваш номер талона.</p>
+                </div>
+
+                <div class="status-row">
+                    <span>Перед вами:</span>
+                    <span id="people-before" class="highlight">0 чел.</span>
+                </div>
+                <div class="status-row">
+                    <span>Примерное время:</span>
+                    <span id="est-time">? мин</span>
+                </div>
+                <div id="status-badge" class="badge waiting">Ожидание</div>
+            </div>
+
+            <div class="controls">
+                <button id="btn-pause" class="btn-secondary" onclick="togglePause()">⏸ Отойти</button>
+                <button id="btn-leave" class="btn-danger" onclick="leaveQueue()">Отказаться</button>
+            </div>
+        </div>
+
+        <!-- Экран Админа -->
+        <div id="admin-screen" class="screen hidden">
+            <div class="admin-header">
+                <h2>Панель организатора</h2>
+                <button onclick="location.reload()" class="btn-small">Выход</button>
+            </div>
+            
+            <div class="current-card-admin">
+                <span>Сейчас у стола:</span>
+                <h1 id="admin-current-ticket">---</h1>
+                <span id="admin-current-name">Никого</span>
+            </div>
+
+            <div class="admin-controls">
+                <button onclick="callNext()" class="btn-primary">📢 СЛЕДУЮЩИЙ</button>
+                <button onclick="resetQueue()" class="btn-danger">♻️ СБРОС</button>
+            </div>
+            
+            <h3>Ожидают (<span id="queue-count">0</span>):</h3>
+            <ul id="admin-list"></ul>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
