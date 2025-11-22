@@ -143,16 +143,68 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil { return }
 	defer ws.Close()
+
 	clients[ws] = true
-	sendQueueState(ws)
+	// Сразу состояние не шлем, ждем или join или reconnect от клиента
+
 	for {
 		var msg Message
-		if err := ws.ReadJSON(&msg); err != nil {
+		err := ws.ReadJSON(&msg)
+		if err != nil {
 			delete(clients, ws)
 			break
 		}
-		if msg.Type == "join" { handleJoin(msg.Payload, ws) }
-		if msg.Type == "action" { handleAction(msg.Payload) }
+
+		if msg.Type == "join" {
+			handleJoin(msg.Payload, ws)
+		} else if msg.Type == "reconnect" {
+			// НОВОЕ: Обработка переподключения
+			handleReconnect(msg.Payload, ws)
+		} else if msg.Type == "action" {
+			handleAction(msg.Payload)
+		}
+	}
+}
+
+// НОВАЯ ФУНКЦИЯ
+func handleReconnect(userID string, ws *websocket.Conn) {
+	queueMutex.Lock()
+	defer queueMutex.Unlock()
+
+	var foundUser *User
+
+	// 1. Ищем в очереди ожидания
+	for _, u := range queue {
+		if u.ID == userID {
+			foundUser = u
+			break
+		}
+	}
+
+	// 2. Ищем в текущем обслуживаемом (если он есть)
+	if foundUser == nil && currentServing != nil && currentServing.ID == userID {
+		foundUser = currentServing
+	}
+
+	// 3. Ищем админа (у админа ID фиксированный или мы его не храним в очереди, 
+    // но для упрощения, если юзер знает пароль, он просто логинится заново. 
+    // Здесь мы восстанавливаем только обычных юзеров, либо если админ был в списке)
+	
+	if foundUser != nil {
+		// Пользователь найден - восстанавливаем сессию
+		ws.WriteJSON(map[string]interface{}{
+			"type": "registered",
+			"user": foundUser,
+		})
+		// И сразу шлем актуальное состояние очереди
+		sendQueueState(ws)
+	} else {
+		// Пользователь не найден (например, сервер перезагрузили)
+		// Шлем команду на очистку LocalStorage
+		ws.WriteJSON(map[string]interface{}{
+			"type": "error",
+			"payload": "session_expired",
+		})
 	}
 }
 

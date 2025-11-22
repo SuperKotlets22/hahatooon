@@ -2,26 +2,46 @@ let ws;
 let myUser = null;
 let queueData = [];
 let isAdminMode = false;
-let wasServed = false; // Флаг: нас начали обслуживать
+let wasServed = false;
 
 function connect() {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     ws = new WebSocket(protocol + window.location.host + '/ws');
+
+    // НОВОЕ: Как только соединились, проверяем, были ли мы тут раньше
+    ws.onopen = () => {
+        const savedID = localStorage.getItem('t_queue_user_id');
+        if (savedID) {
+            console.log("Восстанавливаем сессию для ID:", savedID);
+            ws.send(JSON.stringify({
+                type: 'reconnect',
+                payload: savedID
+            }));
+        }
+    };
 
     ws.onmessage = (event) => {
         const msg = JSON.parse(event.data);
         
         if (msg.type === 'registered') {
             myUser = msg.user;
+            // НОВОЕ: Сохраняем ID в память браузера
+            localStorage.setItem('t_queue_user_id', myUser.id);
+
             if (myUser.is_admin) {
                 showScreen('admin-screen');
             } else {
                 showScreen('user-screen');
                 document.getElementById('my-ticket').textContent = myUser.ticket;
             }
-        } else if (msg.type === 'update') {
+        } 
+        else if (msg.type === 'update') {
             queueData = msg.queue || [];
             renderApp(msg.queue, msg.current);
+        }
+        else if (msg.type === 'error' && msg.payload === 'session_expired') {
+            // Если сервер сказал, что сессия протухла - сбрасываем
+            fullReset();
         }
     };
 
@@ -30,11 +50,15 @@ function connect() {
 
 // --- Логика сброса ---
 function fullReset() {
+    // НОВОЕ: Чистим память браузера
+    localStorage.removeItem('t_queue_user_id');
+    
     myUser = null;
     wasServed = false;
     isAdminMode = false;
-    document.getElementById('username').value = ''; // Очистка поля
+    document.getElementById('username').value = '';
     document.getElementById('password').value = '';
+    
     document.getElementById('login-screen').classList.remove('hidden');
     document.getElementById('user-screen').classList.add('hidden');
     document.getElementById('admin-screen').classList.add('hidden');
@@ -115,7 +139,6 @@ function renderApp(queue, current) {
     const curTicket = document.getElementById('current-serving-ticket');
     const curName = document.getElementById('current-serving-name');
     
-    // Отображение текущего
     if (current) {
         curTicket.textContent = current.ticket;
         curName.textContent = current.name;
@@ -126,31 +149,27 @@ function renderApp(queue, current) {
         curTicket.style.color = "#333";
     }
 
-    // ЛОГИКА ДЛЯ ЮЗЕРА
+    // ЮЗЕР
     if (myUser && !myUser.is_admin) {
         const amICurrent = current && current.id === myUser.id;
         const amInQueue = queue.find(u => u.id === myUser.id);
 
-        // 1. Если меня обслуживали, а теперь я не текущий и не в очереди -> ЗНАЧИТ ВСЁ ЗАКОНЧИЛОСЬ
         if (wasServed && !amICurrent && !amInQueue) {
-            alert("✅ Обслуживание завершено! Спасибо, что воспользовались Т-Очередью.");
+            alert("✅ Обслуживание завершено! Спасибо.");
             fullReset();
             return;
         }
 
-        // 2. Если я стал текущим
         if (amICurrent) {
             wasServed = true;
             curTicket.textContent = "ВЫ!";
             curName.textContent = "Проходите к стойке";
-            document.getElementById('my-position').textContent = "0"; // Костыль для скрытия
+            document.getElementById('my-position').textContent = "0"; 
             document.getElementById('est-time').textContent = "0 мин";
             document.getElementById('status-badge').textContent = "ВАС ВЫЗВАЛИ";
             if(navigator.vibrate) navigator.vibrate([300, 100, 300]);
-        } 
-        // 3. Если я в очереди
-        else if (amInQueue) {
-            wasServed = false; // На случай если вернули обратно
+        } else if (amInQueue) {
+            wasServed = false;
             const myIdx = queue.findIndex(u => u.id === myUser.id);
             const me = queue[myIdx];
 
