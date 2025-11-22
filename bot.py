@@ -1,10 +1,13 @@
 import telebot
 from telebot import types
 import requests
+import os
 
 # --- КОНФИГ ---
-TOKEN = "8293823191:AAGqs7cDTFQfuvWoo6ulPTKoe1lsElgNSq0"  # <--- ПРОВЕРЬ ТОКЕН!!!
-GO_SERVER_URL = "http://localhost:8080"
+TOKEN = "8293823191:AAGqs7cDTFQfuvWoo6ulPTKoe1lsElgNSq0"
+
+# Если есть переменная окружения (в Docker), берем её. Если нет — localhost.
+GO_SERVER_URL = os.getenv("GO_SERVER_URL", "http://localhost:8080")
 
 bot = telebot.TeleBot(TOKEN)
 
