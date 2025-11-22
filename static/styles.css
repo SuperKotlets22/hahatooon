@@ -8,12 +8,37 @@
 
 body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: var(--black); }
 header { background: var(--gray); padding: 15px; display: flex; align-items: center; }
-.logo-t { background: var(--yellow); width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-weight: bold; margin-right: 10px; }
+
+/* Новые стили для изображения логотипа */
+.logo-image { 
+    width: 30px; 
+    height: 30px; 
+    margin-right: 10px; 
+    border-radius: 4px;
+    object-fit: cover; /* чтобы изображение правильно масштабировалось */
+}
+
+/* Удалите или закомментируйте старый стиль .logo-t */
+/*
+.logo-t { 
+    background: var(--yellow); 
+    width: 30px; 
+    height: 30px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    margin-right: 10px; 
+}
+*/
+
 main { max-width: 480px; margin: 0 auto; padding: 20px; }
 
 .hidden { display: none !important; }
 .screen { display: flex; flex-direction: column; gap: 15px; }
 
+/* Остальные ваши стили остаются без изменений */
 /* Login */
 .input-group input { width: 90%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 10px;}
 button { padding: 16px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; background: var(--yellow); width: 100%; }
