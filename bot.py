@@ -2,10 +2,8 @@ import os
 import telebot
 import requests
 
-# Берем токен из переменных окружения или вставь сюда свой жестко
 TOKEN = "8293823191:AAGqs7cDTFQfuvWoo6ulPTKoe1lsElgNSq0" 
 
-# Адрес Go-сервера внутри Docker сети
 GO_SERVER_URL = os.getenv("GO_SERVER_URL", "http://backend:8080")
 
 bot = telebot.TeleBot(TOKEN)
@@ -16,13 +14,11 @@ print("🐍 Python Bot (Lite) запущен...")
 def send_welcome(message):
     bot.reply_to(message, "👋 Привет! Я бот Т-Очереди.\n\nПросто напиши мне номер талона (например, A-105), и я пришлю уведомление, когда подойдет твоя очередь!")
 
-# Обработка текста (привязка талона)
 @bot.message_handler(func=lambda message: True)
 def handle_ticket(message):
     chat_id = message.chat.id
     ticket = message.text.strip().upper()
 
-    # Простая валидация
     if not ticket.startswith("A-"):
         bot.reply_to(message, "❌ Номер должен начинаться с A- (например, A-101)")
         return
@@ -33,11 +29,9 @@ def handle_ticket(message):
     }
 
     try:
-        # Отправляем запрос в Go Backend
         response = requests.post(f"{GO_SERVER_URL}/api/link_telegram", json=payload)
         
         if response.status_code == 200:
-            # БЕЗ КНОПОК, просто текст
             bot.reply_to(message, f"✅ Талон {ticket} успешно привязан!\n\nЯ напишу, когда нужно будет подходить к стойке. Можешь сворачивать Telegram.")
             
         elif response.status_code == 404:
@@ -49,6 +43,5 @@ def handle_ticket(message):
         print(f"Error: {e}")
         bot.reply_to(message, "🔌 Не могу связаться с сервером очереди.")
 
-# Запуск
 if __name__ == "__main__":
     bot.infinity_polling()

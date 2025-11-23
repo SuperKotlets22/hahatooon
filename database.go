@@ -56,10 +56,7 @@ func initDB() {
 	log.Println("✅ Database initialized successfully")
 }
 
-// === Обновленные методы ===
-
 func saveUser(user *User) error {
-	// ИСПРАВЛЕНО: user.JoinedAt теперь int64, поэтому используем time.Unix(user.JoinedAt, 0)
 	joinedAtStr := time.Unix(user.JoinedAt, 0).Format(time.RFC3339)
 	_, err := db.Exec(
 		"INSERT OR REPLACE INTO users (id, name, ticket, status, is_admin, tg_chat_id, joined_at, ip_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -68,7 +65,6 @@ func saveUser(user *User) error {
 	return err
 }
 
-// ДОБАВЛЕНО: Функция удаления, которой не хватало
 func deleteUser(userID string) error {
 	_, err := db.Exec("DELETE FROM users WHERE id = ?", userID)
 	return err
@@ -88,8 +84,7 @@ func findActiveUserByIP(ip string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	
-	// ИСПРАВЛЕНО: парсим время и сохраняем как int64
+
 	t, _ := time.Parse(time.RFC3339, joinedAt)
 	u.JoinedAt = t.Unix() 
 	return &u, nil
@@ -121,8 +116,7 @@ func loadQueueFromDB() []*User {
 		var u User
 		var joinedAt string
 		rows.Scan(&u.ID, &u.Name, &u.Ticket, &u.Status, &u.IsAdmin, &u.TgChatID, &joinedAt, &u.IPAddress)
-		
-		// ИСПРАВЛЕНО: парсим время и сохраняем как int64
+
 		t, _ := time.Parse(time.RFC3339, joinedAt)
 		u.JoinedAt = t.Unix()
 		
@@ -144,8 +138,7 @@ func loadCurrentServing() *User {
 	if err != nil {
 		return nil
 	}
-	
-	// ИСПРАВЛЕНО: парсим время и сохраняем как int64
+
 	t, _ := time.Parse(time.RFC3339, joinedAt)
 	u.JoinedAt = t.Unix()
 	

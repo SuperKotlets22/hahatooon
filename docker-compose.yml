@@ -1,5 +1,5 @@
 services:
-  # Основное Go-приложение
+
   backend:
     build: 
       context: .
@@ -7,11 +7,9 @@ services:
     ports:
       - "80:8080"
     volumes:
-      # Прокидываем файл БД, чтобы данные не терялись
       - ./tqueue.db:/app/tqueue.db
     restart: always
 
-  # Телеграм бот
   bot:
     build:
       context: .
@@ -19,7 +17,5 @@ services:
     depends_on:
       - backend
     environment:
-      # Внутри Docker сеть работает по именам сервисов
-      # Бот будет стучаться не на localhost, а на "http://backend:8080"
       - GO_SERVER_URL=http://backend:8080
     restart: always

@@ -19,7 +19,6 @@ function manualRestoreByIP() {
 
 function connect() {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    // Добавляем порт, если он нестандартный, хотя window.location.host обычно его содержит
     const wsUrl = protocol + window.location.host + '/ws';
     
     console.log("Подключение к:", wsUrl);
@@ -28,7 +27,6 @@ function connect() {
 
     ws.onopen = () => {
         console.log('✅ WebSocket подключен');
-        // Попробуем восстановить сессию из LocalStorage тихо
         const savedID = localStorage.getItem('tqueue_user_id');
         if (savedID) {
             ws.send(JSON.stringify({
@@ -39,7 +37,6 @@ function connect() {
     };
 
     ws.onerror = (error) => {
-        // ЕСЛИ ВЫЛЕЗЕТ ЭТОТ АЛЕРТ - ПРОБЛЕМА СЕТЕВАЯ (БЕЛЫЙ IP БЛОЧИТСЯ)
         alert("❌ ОШИБКА СОКЕТА! Связь заблокирована.");
         console.error('WS Error:', error);
     };
@@ -94,7 +91,7 @@ function fullReset() {
     localStorage.removeItem('tqueue_user_id');
     clearInputFields();
     
-    // 3. Скрываем ВСЕ экраны (у нас есть класс .screen у всех блоков)
+    // 3. Скрываем ВСЕ экраны
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     
     // 4. Явно показываем начальный экран УЧАСТНИКА
@@ -116,15 +113,13 @@ function joinQueue(type) {
     let name, pass;
 
     if (type === 'admin') {
-        // Берем данные из формы админа
         name = document.getElementById('admin-username').value;
         pass = document.getElementById('admin-password').value;
         if (!name) return alert("Введите имя (например: Стол 1)!");
         if (!pass) return alert("Введите пароль!");
     } else {
-        // Берем данные из формы юзера
         name = document.getElementById('username').value;
-        pass = ""; // У юзера нет пароля
+        pass = ""; 
         if (!name) return alert("Введите ваше имя!");
     }
 
@@ -150,7 +145,6 @@ function switchToAdmin() {
     // Показываем экран админа
     document.getElementById('admin-login-screen').classList.remove('hidden');
     
-    // Очищаем поля админа при входе
     document.getElementById('admin-password').value = '';
 }
 
@@ -172,7 +166,6 @@ function togglePause() {
 function leaveQueue() {
     if (!confirm("Точно отказаться от талона? Вернуть его будет нельзя.")) return;
     
-    // 1. Отправляем сигнал на сервер (чтобы пометить в БД как left)
     if (myUser) {
         ws.send(JSON.stringify({
             type: 'action',
@@ -180,10 +173,8 @@ function leaveQueue() {
         }));
     }
 
-    // 2. Немедленно убиваем сессию в браузере
     localStorage.removeItem('tqueue_user_id');
     
-    // 3. Сбрасываем интерфейс
     fullReset();
 }
 
@@ -210,7 +201,6 @@ function renderApp(queue, current) {
         curTicket.style.color = "#333";
     }
 
-    // Если я ЮЗЕР
     if (myUser && !myUser.is_admin) {
         const amICurrent = current && current.id === myUser.id;
         const amInQueue = queue.find(u => u.id === myUser.id);
@@ -237,9 +227,7 @@ function renderApp(queue, current) {
 
             document.getElementById('people-before').textContent = myIdx + " чел.";
             
-            // --- ИЗМЕНЕНИЕ ЗДЕСЬ: Умножаем на 10 минут ---
             document.getElementById('est-time').textContent = "~" + ((myIdx + 1) * 10) + " мин";
-            // ---------------------------------------------
 
             const badge = document.getElementById('status-badge');
             const btnPause = document.getElementById('btn-pause');
@@ -252,7 +240,6 @@ function renderApp(queue, current) {
         }
     }
 
-    // Если я АДМИН (код без изменений)
     if (myUser && myUser.is_admin) {
         document.getElementById('queue-count').textContent = queue.length;
         if(current) {
@@ -280,12 +267,12 @@ document.addEventListener('DOMContentLoaded', function() {
     isAdminMode = false;
     connect();
 });
-// --- ЛОГИКА ИГРЫ 2048 ---
+//ЛОГИКА ИГРЫ 2048
 const boardSize = 4;
 let board = [];
 let score = 0;
 
-// Инициализация игры (вызывать при показе экрана user-screen)
+// Инициализация игры 
 function initGame() {
     board = Array(boardSize * boardSize).fill(0);
     score = 0;
@@ -375,7 +362,6 @@ function move(direction) {
     }
 }
 
-// Управление (Клавиатура + Свайпы)
 function setupInput() {
     // Клавиатура
     document.onkeydown = (e) => {
@@ -406,7 +392,6 @@ function handleSwipe(startX, startY, endX, endY) {
     let dx = endX - startX;
     let dy = endY - startY;
     
-    // Определяем, куда был свайп (гор. или верт.)
     if (Math.abs(dx) > Math.abs(dy)) {
         if (Math.abs(dx) > 30) move(dx > 0 ? 'Right' : 'Left');
     } else {

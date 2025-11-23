@@ -16,13 +16,12 @@ import (
 const telegramToken = "8293823191:AAGqs7cDTFQfuvWoo6ulPTKoe1lsElgNSq0"
 const adminPassword = "admin"
 
-// --- Структуры ---
 type User struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	Ticket    string `json:"ticket"`
 	Status    string `json:"status"`
-	JoinedAt  int64  `json:"joined_at"` // ИСПРАВЛЕНО: int64 вместо time.Time
+	JoinedAt  int64  `json:"joined_at"` 
 	IsAdmin   bool   `json:"is_admin"`
 	TgChatID  int64  `json:"tg_chat_id"`
 	IPAddress string `json:"ip_address"`
@@ -63,7 +62,6 @@ var (
 )
 
 func main() {
-	// Инициализируем БД
 	initDB()
 
 	queueMutex.Lock()
@@ -94,7 +92,6 @@ func handleBotAction(w http.ResponseWriter, r *http.Request) {
 	queueMutex.Lock()
 	defer queueMutex.Unlock()
 
-	// Находим юзера по ChatID
 	var targetUser *User
 	for _, u := range queue {
 		if u.TgChatID == req.ChatID {
@@ -108,7 +105,6 @@ func handleBotAction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Выполняем действие
 	if req.Action == "pause" {
 		if targetUser.Status == "frozen" {
 			targetUser.Status = "waiting"
@@ -125,7 +121,7 @@ func handleBotAction(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		queue = newQueue
-		deleteUser(targetUser.ID) // Функция теперь есть в database.go
+		deleteUser(targetUser.ID)
 	}
 
 	broadcastQueueState()
@@ -206,7 +202,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
     		if err != nil {
         		host = ws.RemoteAddr().String()
     		}
-    		handleRestoreByIP(host, ws) // Передаем чистый IP
+    		handleRestoreByIP(host, ws) 
 		}
 		if msg.Type == "join" {
 			handleJoin(msg.Payload, ws)
@@ -229,7 +225,6 @@ func handleWSRestoreSession(payloadStr string, ws *websocket.Conn) {
 	queueMutex.Lock()
 	defer queueMutex.Unlock()
 
-	// Ищем пользователя
 	var user *User
 	for _, u := range queue {
 		if u.ID == payload.UserID {
@@ -270,7 +265,7 @@ func handleJoin(payloadStr string, ws *websocket.Conn) {
 
 	host, _, err := net.SplitHostPort(ws.RemoteAddr().String())
 	if err != nil {
-    	// Если ошибка (например, нет порта), берем как есть
+
     	host = ws.RemoteAddr().String()
 	}
 	ip := host
@@ -293,7 +288,7 @@ func handleJoin(payloadStr string, ws *websocket.Conn) {
 	newUser := &User{
 		ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
 		Name:      payload.Name,
-		JoinedAt:  time.Now().Unix(), // Теперь это int64, ошибок не будет
+		JoinedAt:  time.Now().Unix(), 
 		Status:    "waiting",
 		IPAddress: ip,
 	}
@@ -347,9 +342,6 @@ func handleAction(payloadStr string) {
 			if u.ID != payload.UserID {
 				newQueue = append(newQueue, u)
 			} else {
-				// 🚨 ВАЖНО: Ставим статус 'left' в БД.
-				// Функция findActiveUserByIP ищет только ('waiting', 'frozen', 'served').
-				// Поэтому этот пользователь больше не найдется при восстановлении.
 				updateUserStatus(u.ID, "left")
 			}
 		}
@@ -391,9 +383,6 @@ func handleAction(payloadStr string) {
 	case "reset":
 		queue = []*User{}
 		currentServing = nil
-		// ticketCounter = 100 // УДАЛЕНО, так как управляется БД
-
-		// Полная очистка БД
 		db.Exec("DELETE FROM users")
 		db.Exec("UPDATE queue_state SET current_user_id = NULL, ticket_counter = 100 WHERE key = 'main'")
 	}

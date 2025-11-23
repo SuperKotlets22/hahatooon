@@ -1,16 +1,15 @@
 :root {
     /* Палитра Т-Банка и НГТУ */
-    --accent: #FFDD2D;       /* Желтый */
-    --accent-hover: #FFD100; /* Темно-желтый */
+    --accent: #FFDD2D;
+    --accent-hover: #FFD100; 
     --text-main: #333333;
     --text-sec: #9299A2;
-    --bg-page: #F3F4F6;      /* Светло-серый фон страницы */
+    --bg-page: #F3F4F6;      
     --bg-card: #FFFFFF;
     --nstu-red: #ea003d;
-    --success: #009358;      /* Зеленый */
-    --danger: #EC593F;       /* Красный */
+    --success: #009358;      
+    --danger: #EC593F;       
     
-    /* Размеры и отступы */
     --radius-l: 24px;
     --radius-m: 16px;
     --radius-s: 12px;
@@ -31,30 +30,30 @@ body {
     display: flex;
     flex-direction: column;
 }
-/* --- ШАПКА АДМИНКИ --- */
+/* ШАПКА АДМИНКИ */
 .admin-header {
     display: flex;
-    justify-content: space-between; /* Главный секрет: разносит элементы по краям */
-    align-items: center;            /* Выравнивает по вертикали */
-    margin-bottom: 24px;            /* Отступ снизу до контента */
+    justify-content: space-between; 
+    align-items: center;            
+    margin-bottom: 24px;            
     padding-bottom: 16px;
-    border-bottom: 1px solid #f0f0f0; /* Легкая линия-разделитель */
+    border-bottom: 1px solid #f0f0f0; 
 }
 
 .admin-header h2 {
-    margin: 0; /* Убираем стандартные отступы заголовка */
+    margin: 0; 
     font-size: 22px;
     font-weight: 800;
 }
 
-/* Стиль для кнопки Выход */
+
 .btn-exit {
-    width: auto;           /* Кнопка занимает место только по тексту */
+    width: auto;           
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 600;
-    background-color: #FFF1F0; /* Нежно-розовый фон */
-    color: #EB5757;            /* Красный текст */
+    background-color: #FFF1F0; 
+    color: #EB5757;            
     border-radius: 10px;
     box-shadow: none;
     border: 1px solid transparent;
@@ -64,12 +63,12 @@ body {
     background-color: #FFE5E5;
     transform: scale(0.95);
 }
-/* --- ХЕДЕР (Обновленный) --- */
+/* ХЕДЕР*/
 header {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 12px 20px; /* Чуть уменьшили вертикальный отступ, так как логотип сам задаст высоту */
+    padding: 12px 20px; 
     display: flex;
     align-items: center;
     position: sticky;
@@ -87,26 +86,25 @@ header {
 
 .logo-area:active { opacity: 0.7; }
 
-/* --- ЛОГОТИП (Увеличенный) --- */
+/*ЛОГОТИП*/
 .logo-image { 
-    /* Было 36px -> Стало 56px (Заметно больше) */
     width: 56px; 
     height: 56px; 
     
-    margin-right: 14px; /* Чуть больше отступ до текста */
-    border-radius: 12px; /* Скругление тоже увеличим для красоты */
-    box-shadow: 0 4px 12px rgba(255, 221, 45, 0.5); /* Тень чуть жирнее */
-    object-fit: contain; /* Чтобы логотип не обрезался, если он не квадратный */
+    margin-right: 14px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(255, 221, 45, 0.5); 
+    object-fit: contain; 
 }
 
 .brand-name {
-    font-weight: 800; /* Сделали жирнее */
-    font-size: 25px;  /* Было 17px -> Стало 20px */
+    font-weight: 800; 
+    font-size: 25px;  
     letter-spacing: -0.5px;
     line-height: 1.5;
 }
 
-/* --- КОНТЕЙНЕР --- */
+/*  КОНТЕЙНЕР */
 main {
     max-width: 460px;
     width: 100%;
@@ -115,10 +113,10 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Центрируем контент по вертикали */
+    justify-content: center; 
 }
 
-/* --- АНИМАЦИИ --- */
+/*  АНИМАЦИИ  */
 .screen {
     display: flex;
     flex-direction: column;
@@ -133,7 +131,7 @@ main {
 
 .hidden { display: none !important; }
 
-/* --- ТИПОГРАФИКА --- */
+/*ТИПОГРАФИКА*/
 h1 {
     font-size: 28px;
     font-weight: 900;
@@ -148,10 +146,10 @@ p {
     line-height: 1.5;
 }
 
-/* --- UI ЭЛЕМЕНТЫ --- */
-/* Ссылка на бота */
+/*UI ЭЛЕМЕНТЫ */
+
 .tg-link {
-    color: #2AABEE; /* Официальный цвет Telegram */
+    color: #2AABEE;
     font-weight: 800;
     text-decoration: none;
     border-bottom: 2px solid rgba(42, 171, 238, 0.3);
@@ -166,22 +164,21 @@ p {
     transform: translateY(-1px);
 }
 
-/* Обновляем сам блок промо, чтобы текст стоял красивее */
 .tg-promo {
-    background: #F4F4F5; /* Более нейтральный фон */
+    background: #F4F4F5;
     padding: 16px;
     border-radius: var(--radius-m);
     font-size: 15px;
     margin-bottom: 24px;
     color: var(--text-main);
     border: 1px solid rgba(0,0,0,0.05);
-    text-align: left; /* Выравнивание по левому краю для читаемости */
+    text-align: left; 
     line-height: 1.6;
     position: relative;
     overflow: hidden;
 }
 
-/* Добавляем полоску слева для акцента */
+
 .tg-promo::before {
     content: '';
     position: absolute;
@@ -259,7 +256,7 @@ button:active { transform: scale(0.96); }
     font-weight: 500;
 }
 
-/* --- КАРТОЧКИ --- */
+/* КАРТОЧКИ */
 .status-card, .my-info-card, .current-card-admin {
     background: var(--bg-card);
     padding: 28px;
@@ -270,7 +267,6 @@ button:active { transform: scale(0.96); }
     overflow: hidden;
 }
 
-/* Эффект для карточки талона */
 .my-info-card::before {
     content: '';
     position: absolute;
@@ -303,7 +299,7 @@ button:active { transform: scale(0.96); }
     color: var(--text-main);
 }
 
-/* --- ИНФО СТРОКИ --- */
+/* ИНФО СТРОКИ */
 .status-row {
     display: flex;
     justify-content: space-between;
@@ -322,7 +318,7 @@ button:active { transform: scale(0.96); }
     font-size: 18px;
 }
 
-/* --- БЕЙДЖИ СТАТУСА --- */
+
 .badge {
     display: inline-block;
     padding: 8px 16px;
@@ -344,21 +340,21 @@ button:active { transform: scale(0.96); }
     color: var(--text-sec); 
 }
 
-/* --- ТЕЛЕГРАМ БЛОК --- */
+
 .tg-promo {
     background: #F5F9FA;
     padding: 16px;
     border-radius: var(--radius-m);
     font-size: 14px;
     margin-bottom: 20px;
-    color: #3B8AD9; /* Цвет Telegram */
+    color: #3B8AD9; 
     border: 1px solid rgba(59, 138, 217, 0.1);
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-/* --- АДМИН СПИСОК --- */
+
 #admin-list {
     list-style: none;
     padding: 0;
@@ -391,29 +387,25 @@ button:active { transform: scale(0.96); }
 
 .admin-controls { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;}
-/* --- КНОПКА ВЫХОДА (Плавающая) --- */
 
-/* 1. Делаем экран админа "опорной точкой" */
 #admin-screen {
     position: relative;
-    /* Добавляем отступ сверху, чтобы кнопка не налезла на заголовок "Панель..." */
     padding-top: 5px; 
 }
 
-/* 2. Стиль самой кнопки */
 .btn-exit-top {
     position: absolute;
     top: 0;
     right: 0;
     
-    width: auto; /* Авто-ширина по тексту */
+    width: auto;
     padding: 10px 16px;
     
     font-size: 14px;
     font-weight: 700;
     
-    background-color: #FFFFFF; /* Светло-красный фон */
-    color: #333333;            /* Красный текст */
+    background-color: #FFFFFF; 
+    color: #333333;          
     border: 1px solid rgba(235, 87, 87, 0.1);
     
     border-radius: 12px;
@@ -426,13 +418,12 @@ button:active { transform: scale(0.96); }
     transform: scale(0.95);
 }
 
-/* 3. Убираем лишние отступы у заголовка, так как кнопка теперь не там */
 .admin-header {
-    text-align: center; /* Можно отцентровать заголовок для красоты */
+    text-align: center; 
     margin-bottom: 20px;
 }
 
-/* --- ИГРА 2048 --- */
+/*ИГРА 2048*/
 .game-card {
     background: #fff;
     padding: 20px;
@@ -464,14 +455,10 @@ button:active { transform: scale(0.96); }
     font-size: 14px;
 }
 
-/* --- СТИЛИ ИГРЫ 2048 (Т-Банк Edition) --- */
-
-/* Фон игрового поля - Темно-серый */
 .grid-container {
-    background: #333333; /* Т-Банк Черный */
+    background: #333333;
     padding: 8px;
     border-radius: 12px;
-    /* Остальные свойства grid остаются те же */
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
@@ -483,9 +470,8 @@ button:active { transform: scale(0.96); }
     touch-action: none;
 }
 
-/* Пустая ячейка */
 .tile {
-    background: #4f4f4f; /* Чуть светлее фона */
+    background: #4f4f4f; 
     border-radius: 6px;
     display: flex;
     justify-content: center;
@@ -496,31 +482,22 @@ button:active { transform: scale(0.96); }
     transition: all 0.15s ease;
 }
 
-/* --- ЦВЕТА ПЛИТОК --- */
-
-/* 2: Белый */
 .tile[data-val="2"] { background: #FFFFFF; color: #333; }
 
-/* 4: Светло-желтый */
 .tile[data-val="4"] { background: #FFF9D6; color: #333; }
 
-/* 8: Желтый (Фирменный) */
 .tile[data-val="8"] { 
     background: #FFDD2D; 
     color: #333; 
     box-shadow: 0 0 10px rgba(255, 221, 45, 0.4);
 }
 
-/* 16: Темно-желтый */
 .tile[data-val="16"] { background: #FFC400; color: #333; }
 
-/* 32: Оранжевый */
 .tile[data-val="32"] { background: #FF9900; color: #fff; }
 
-/* 64: Темный с белым текстом */
 .tile[data-val="64"] { background: #555555; color: #fff; }
 
-/* 128: Черный с желтым текстом */
 .tile[data-val="128"] { 
     background: #222222; 
     color: #FFDD2D; 
@@ -528,7 +505,6 @@ button:active { transform: scale(0.96); }
     font-size: 20px;
 }
 
-/* 256+: Инверсия (Желтый фон, черный текст, мощная тень) */
 .tile[data-val="256"] { background: #FFDD2D; color: #000; font-size: 20px; box-shadow: 0 0 15px #FFDD2D; }
 .tile[data-val="512"] { background: #FFDD2D; color: #000; font-size: 20px; box-shadow: 0 0 20px #FFDD2D; }
 .tile[data-val="1024"] { background: #000; color: #FFF; font-size: 16px; border: 2px solid #fff; }

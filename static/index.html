@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Т-Очередь</title>
-    <!-- Подключаем шрифт Inter -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 
     <header>
         <div class="logo-area" onclick="fullReset()" style="cursor: pointer;">
-            <img src="logo.png" alt="Логотип" class="logo-image" />
+            <img src="logo2.png" alt="Логотип" class="logo-image" />
             <span class="brand-name">Т-Банк & НГТУ</span>
         </div>
     </header>
@@ -31,13 +31,12 @@
 
             <button onclick="joinQueue('user')" id="user-join-btn">Получить талон</button>
             
-            <!-- Кнопка восстановления только для участника -->
             <button id="restore-btn" onclick="manualRestoreByIP()" class="btn-secondary" style="margin-top: 15px;">
-                🔄 Я уже в очереди (Восстановить)
+                🔄 Я уже в очереди
             </button>
             
             <div class="login-footer">
-                <span onclick="switchToAdmin()">Я организатор</span>
+                <span onclick="switchToAdmin()" style="cursor: pointer;">Я организатор</span>
             </div>
         </div>
 
@@ -57,7 +56,7 @@
             <button onclick="joinQueue('admin')" class="btn-primary">Войти</button>
 
             <div class="login-footer">
-                <span onclick="switchToUser()">⬅️ Я участник</span>
+                <span onclick="switchToUser()" style="cursor: pointer;" >⬅️ Я участник</span>
             </div>
         </div>
 
@@ -80,8 +79,8 @@
 
                 <div class="tg-promo">
                     <p>Напишите боту:
-                        <a href="https://t.me/ТВОЙ_БОТ" target="_blank" class="tg-link">
-                            @bot ↗
+                        <a href="https://t.me/hahaton123bot" target="_blank" class="tg-link">
+                            @hahaton123bot ↗
                         </a>
                         <br>ваш номер талона.
                     </p>
@@ -96,9 +95,9 @@
                     <span id="est-time">? мин</span>
                 </div>
                 <div id="status-badge" class="badge waiting">Ожидание</div>
-            </div> <!-- ⛔️ ВАЖНО: Игра должна быть ПОСЛЕ этого закрывающего div -->
+            </div>
 
-            <!-- 3. ИГРА 2048 (Вставляем сюда) -->
+            <!-- 3. ИГРА 2048 -->
             <div class="game-card">
                 <div class="game-header">
                     <h3>Скучно? Сыграйте в 2048!</h3>
@@ -119,10 +118,9 @@
         <!-- Экран Админа -->
         <div id="admin-screen" class="screen hidden">
             
-            <!-- Кнопка ВЫХОД (Теперь стоит отдельно в самом верху) -->
+            <!-- Кнопка ВЫХОД -->
             <button onclick="fullReset()" class="btn-exit-top">Выход</button>
 
-            <!-- Заголовок ниже -->
             <div class="admin-header">
                 <h2>Панель организатора</h2>
             </div>

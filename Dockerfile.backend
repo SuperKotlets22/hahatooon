@@ -1,35 +1,33 @@
-# Этап 1: Сборка (Builder)
+
 FROM golang:1.23-alpine AS builder
 
-# 🚨 ВАЖНО: Устанавливаем GCC и Musl (нужны для SQLite)
+
 RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
-# Скачиваем зависимости
+
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Копируем исходный код
+
 COPY . .
 
-# Собираем бинарник с поддержкой CGO (SQLite)
+
 ENV CGO_ENABLED=1
 RUN go build -v -x -o t-queue-server .
 
-# Этап 2: Финальный образ (Runner)
+
 FROM alpine:latest
 
 WORKDIR /app
 
-# Копируем скомпилированный файл из первого этапа
+
 COPY --from=builder /app/t-queue-server .
 
-# 🚨 ВАЖНО: Копируем папку static (HTML/CSS/JS)
 COPY --from=builder /app/static ./static
 
-# Открываем порт
+
 EXPOSE 8080
 
-# Запускаем
 CMD ["./t-queue-server"]
