@@ -58,9 +58,11 @@ function connect() {
             
             if (myUser.is_admin) {
                 showScreen('admin-screen');
+                setTimeout(initGame, 100);
             } else {
                 showScreen('user-screen');
                 document.getElementById('my-ticket').textContent = myUser.ticket;
+                setTimeout(initGame, 100);
             }
             if (msg.queue) renderApp(msg.queue, msg.current);
         } 
@@ -81,17 +83,27 @@ function connect() {
 }
 
 function fullReset() {
+    console.log("♻️ Выполняем полный сброс...");
+    
+    // 1. Сбрасываем переменные
     myUser = null;
     wasServed = false;
     isAdminMode = false;
+    
+    // 2. Чистим память
     localStorage.removeItem('tqueue_user_id');
     clearInputFields();
     
-    // Скрываем всё
+    // 3. Скрываем ВСЕ экраны (у нас есть класс .screen у всех блоков)
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     
-    // Показываем экран входа УЧАСТНИКА
-    document.getElementById('user-login-screen').classList.remove('hidden');
+    // 4. Явно показываем начальный экран УЧАСТНИКА
+    const startScreen = document.getElementById('user-login-screen');
+    if (startScreen) {
+        startScreen.classList.remove('hidden');
+    } else {
+        console.error("❌ Ошибка: Не найден экран user-login-screen");
+    }
 }
 
 function showScreen(id) {
@@ -268,3 +280,136 @@ document.addEventListener('DOMContentLoaded', function() {
     isAdminMode = false;
     connect();
 });
+// --- ЛОГИКА ИГРЫ 2048 ---
+const boardSize = 4;
+let board = [];
+let score = 0;
+
+// Инициализация игры (вызывать при показе экрана user-screen)
+function initGame() {
+    board = Array(boardSize * boardSize).fill(0);
+    score = 0;
+    updateScore();
+    addRandomTile();
+    addRandomTile();
+    renderBoard();
+    setupInput();
+}
+
+function restartGame() {
+    initGame();
+}
+
+function renderBoard() {
+    const container = document.getElementById('game-board');
+    container.innerHTML = '';
+    board.forEach(val => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        if (val > 0) {
+            tile.textContent = val;
+            tile.setAttribute('data-val', val);
+        }
+        container.appendChild(tile);
+    });
+}
+
+function addRandomTile() {
+    const emptyIndices = board.map((val, idx) => val === 0 ? idx : null).filter(val => val !== null);
+    if (emptyIndices.length === 0) return;
+    const randomIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    board[randomIdx] = Math.random() < 0.9 ? 2 : 4;
+}
+
+function updateScore() {
+    const sEl = document.getElementById('score');
+    if(sEl) sEl.textContent = score;
+}
+
+// Логика движения
+function slide(row) {
+    let arr = row.filter(val => val);
+    let missing = boardSize - arr.length;
+    let zeros = Array(missing).fill(0);
+    return arr.concat(zeros);
+}
+
+function combine(row) {
+    for (let i = 0; i < boardSize - 1; i++) {
+        if (row[i] !== 0 && row[i] === row[i + 1]) {
+            row[i] *= 2;
+            row[i + 1] = 0;
+            score += row[i];
+        }
+    }
+    return row;
+}
+
+function move(direction) {
+    let oldBoard = [...board];
+    let moved = false;
+
+    if (direction === 'Left' || direction === 'Right') {
+        for (let i = 0; i < boardSize * boardSize; i += boardSize) {
+            let row = board.slice(i, i + boardSize);
+            if (direction === 'Right') row.reverse();
+            row = slide(combine(slide(row)));
+            if (direction === 'Right') row.reverse();
+            for (let j = 0; j < boardSize; j++) board[i + j] = row[j];
+        }
+    } else { // Up or Down
+        for (let i = 0; i < boardSize; i++) {
+            let col = [board[i], board[i + boardSize], board[i + boardSize * 2], board[i + boardSize * 3]];
+            if (direction === 'Down') col.reverse();
+            col = slide(combine(slide(col)));
+            if (direction === 'Down') col.reverse();
+            board[i] = col[0]; board[i + boardSize] = col[1];
+            board[i + boardSize * 2] = col[2]; board[i + boardSize * 3] = col[3];
+        }
+    }
+
+    if (JSON.stringify(oldBoard) !== JSON.stringify(board)) {
+        addRandomTile();
+        renderBoard();
+        updateScore();
+    }
+}
+
+// Управление (Клавиатура + Свайпы)
+function setupInput() {
+    // Клавиатура
+    document.onkeydown = (e) => {
+        if (e.key === 'ArrowLeft') move('Left');
+        else if (e.key === 'ArrowRight') move('Right');
+        else if (e.key === 'ArrowUp') move('Up');
+        else if (e.key === 'ArrowDown') move('Down');
+    };
+
+    // Свайпы для телефонов
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const gameBoard = document.getElementById('game-board');
+
+    gameBoard.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, {passive: false});
+
+    gameBoard.addEventListener('touchend', (e) => {
+        let touchEndX = e.changedTouches[0].screenX;
+        let touchEndY = e.changedTouches[0].screenY;
+        handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+    }, {passive: false});
+}
+
+function handleSwipe(startX, startY, endX, endY) {
+    let dx = endX - startX;
+    let dy = endY - startY;
+    
+    // Определяем, куда был свайп (гор. или верт.)
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (Math.abs(dx) > 30) move(dx > 0 ? 'Right' : 'Left');
+    } else {
+        if (Math.abs(dy) > 30) move(dy > 0 ? 'Down' : 'Up');
+    }
+}
