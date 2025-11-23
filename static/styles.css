@@ -1,67 +1,355 @@
 :root {
-    --yellow: #FFDD2D;
-    --black: #333;
-    --gray: #F5F5F5;
-    --green: #219653;
-    --red: #EB5757;
+    /* Палитра Т-Банка и НГТУ */
+    --accent: #FFDD2D;       /* Желтый */
+    --accent-hover: #FFD100; /* Темно-желтый */
+    --text-main: #333333;
+    --text-sec: #9299A2;
+    --bg-page: #F3F4F6;      /* Светло-серый фон страницы */
+    --bg-card: #FFFFFF;
+    --success: #219653;      /* Зеленый */
+    --danger: #EC593F;       /* Красный */
+    
+    /* Размеры и отступы */
+    --radius-l: 24px;
+    --radius-m: 16px;
+    --radius-s: 12px;
+    --shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.08);
 }
 
-body { font-family: 'Inter', sans-serif; margin: 0; background: #fff; color: var(--black); }
-header { background: var(--gray); padding: 15px; display: flex; align-items: center; }
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-/* Новые стили для изображения логотипа */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ХЕДЕР (Glassmorphism) --- */
+header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.logo-area:active { opacity: 0.7; }
+
 .logo-image { 
-    width: 30px; 
-    height: 30px; 
-    margin-right: 10px; 
-    border-radius: 4px;
-    object-fit: cover; /* чтобы изображение правильно масштабировалось */
+    width: 36px; 
+    height: 36px; 
+    margin-right: 12px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(255, 221, 45, 0.4);
 }
 
-/* Удалите или закомментируйте старый стиль .logo-t */
-/*
-.logo-t { 
-    background: var(--yellow); 
-    width: 30px; 
-    height: 30px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    border-radius: 4px; 
-    font-weight: bold; 
-    margin-right: 10px; 
+.brand-name {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.3px;
 }
-*/
 
-main { max-width: 480px; margin: 0 auto; padding: 20px; }
+/* --- КОНТЕЙНЕР --- */
+main {
+    max-width: 460px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Центрируем контент по вертикали */
+}
+
+/* --- АНИМАЦИИ --- */
+.screen {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .hidden { display: none !important; }
-.screen { display: flex; flex-direction: column; gap: 15px; }
 
-/* Остальные ваши стили остаются без изменений */
-/* Login */
-.input-group input { width: 90%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 10px;}
-button { padding: 16px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; background: var(--yellow); width: 100%; }
-.login-footer { text-align: center; margin-top: 10px; color: #666; cursor: pointer; text-decoration: underline; font-size: 14px; }
+/* --- ТИПОГРАФИКА --- */
+h1 {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 0 0 8px 0;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
 
-/* Cards */
-.status-card, .my-info-card, .current-card-admin { background: #FAFAFA; padding: 20px; border-radius: 16px; text-align: center; border: 1px solid #eee; }
-.ticket-display { font-size: 48px; font-weight: 900; margin: 10px 0; line-height: 1; }
-.ticket-badge { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-.ticket-badge .number { display: block; font-size: 40px; font-weight: bold; color: var(--black); }
+p {
+    color: var(--text-sec);
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+}
 
-/* Telegram Promo */
-.tg-promo { background: #eefbfd; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; color: #2c8496; }
+/* --- UI ЭЛЕМЕНТЫ --- */
+/* Ссылка на бота */
+.tg-link {
+    color: #2AABEE; /* Официальный цвет Telegram */
+    font-weight: 800;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(42, 171, 238, 0.3);
+    transition: all 0.2s ease;
+    display: inline-block;
+    margin: 0 4px;
+}
 
-/* Admin List */
-#admin-list { list-style: none; padding: 0; }
-.queue-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
-.t-number { font-weight: bold; background: var(--black); color: #fff; padding: 4px 8px; border-radius: 4px; margin-right: 10px; font-size: 14px; }
-.item-frozen { opacity: 0.6; background: #fcfcfc; }
+.tg-link:hover {
+    color: #229ED9;
+    border-bottom-color: #229ED9;
+    transform: translateY(-1px);
+}
 
-/* Controls */
-.controls, .admin-controls { display: flex; gap: 10px; }
-.btn-secondary { background: #eee; color: #333; }
-.btn-danger { background: #fcedec; color: var(--red); }
-.btn-primary { background: var(--black); color: #fff; }
-.btn-small { width: auto; padding: 8px 15px; background: transparent; border: 1px solid #ccc; }
+/* Обновляем сам блок промо, чтобы текст стоял красивее */
+.tg-promo {
+    background: #F4F4F5; /* Более нейтральный фон */
+    padding: 16px;
+    border-radius: var(--radius-m);
+    font-size: 15px;
+    margin-bottom: 24px;
+    color: var(--text-main);
+    border: 1px solid rgba(0,0,0,0.05);
+    text-align: left; /* Выравнивание по левому краю для читаемости */
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Добавляем полоску слева для акцента */
+.tg-promo::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+    background: #2AABEE;
+}
+.input-group input {
+    width: 100%;
+    padding: 18px;
+    border: 1px solid transparent;
+    background: #FFFFFF;
+    border-radius: var(--radius-m);
+    font-size: 17px;
+    font-weight: 500;
+    outline: none;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.input-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(255, 221, 45, 0.25);
+}
+
+button {
+    padding: 18px;
+    border: none;
+    border-radius: var(--radius-m);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--accent);
+    color: var(--text-main);
+    width: 100%;
+    transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(255, 221, 45, 0.3);
+}
+
+button:active { transform: scale(0.96); }
+
+.btn-secondary {
+    background: #FFFFFF;
+    color: var(--text-main);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 12px;
+}
+
+.btn-danger {
+    background: #FFEBEE;
+    color: var(--danger);
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: var(--text-main);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-small {
+    width: auto;
+    padding: 8px 16px;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.login-footer {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--text-sec);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* --- КАРТОЧКИ --- */
+.status-card, .my-info-card, .current-card-admin {
+    background: var(--bg-card);
+    padding: 28px;
+    border-radius: var(--radius-l);
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Эффект для карточки талона */
+.my-info-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--accent), var(--success));
+}
+
+.ticket-display {
+    font-size: 64px;
+    font-weight: 900;
+    margin: 16px 0;
+    letter-spacing: -2px;
+    color: var(--text-main);
+}
+
+.ticket-badge .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.ticket-badge .number {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--text-main);
+}
+
+/* --- ИНФО СТРОКИ --- */
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+    color: var(--text-sec);
+}
+
+.status-row:last-of-type { border-bottom: none; }
+
+.highlight {
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* --- БЕЙДЖИ СТАТУСА --- */
+.badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.waiting { 
+    background: #E8F5E9; 
+    color: var(--success); 
+}
+
+.badge.frozen { 
+    background: #F3F4F6; 
+    color: var(--text-sec); 
+}
+
+/* --- ТЕЛЕГРАМ БЛОК --- */
+.tg-promo {
+    background: #F5F9FA;
+    padding: 16px;
+    border-radius: var(--radius-m);
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #3B8AD9; /* Цвет Telegram */
+    border: 1px solid rgba(59, 138, 217, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* --- АДМИН СПИСОК --- */
+#admin-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 24px;
+}
+
+.queue-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background: #fff;
+    border-radius: var(--radius-m);
+    margin-bottom: 10px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: transform 0.2s;
+}
+
+.queue-item:hover { transform: translateY(-2px); }
+
+.t-number {
+    font-weight: 800;
+    background: var(--text-main);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-right: 12px;
+    font-size: 13px;
+}
+
+.admin-controls { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;}

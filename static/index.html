@@ -2,38 +2,63 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Т-Очередь</title>
+    <!-- Подключаем шрифт Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <header>
         <div class="logo-area" onclick="fullReset()" style="cursor: pointer;">
-            <img src="logo2.png" alt="Логотип" class="logo-image" />
+            <!-- Если картинки нет, будет просто буква Т -->
+            <div class="logo-t">T</div> 
             <span class="brand-name">Т-Банк & НГТУ</span>
         </div>
     </header>
 
     <main>
-        <!-- Экран входа -->
-        <div id="login-screen" class="screen">
+        <!-- ЭКРАН 1: ВХОД УЧАСТНИКА -->
+        <div id="user-login-screen" class="screen">
             <h1>Электронная очередь</h1>
-            <p>Получите талон и следите за очередью онлайн</p>
+            <p id="main-subtitle">Цените своё время — занимайте очередь онлайн</p>
             
             <div class="input-group">
                 <input type="text" id="username" placeholder="Ваше имя" />
             </div>
 
-            <!-- Скрытое поле для пароля админа -->
-            <div class="input-group hidden" id="admin-field">
-                <input type="password" id="password" placeholder="Пароль администратора" />
-            </div>
-
-            <button onclick="joinQueue()" id="join-btn">Получить талон</button>
+            <button onclick="joinQueue('user')" id="user-join-btn">Получить талон</button>
+            
+            <!-- Кнопка восстановления только для участника -->
+            <button id="restore-btn" onclick="manualRestoreByIP()" class="btn-secondary" style="margin-top: 15px;">
+                🔄 Я уже в очереди (Восстановить)
+            </button>
             
             <div class="login-footer">
-                <span id="toggle-auth" onclick="toggleAdminMode()">Я организатор</span>
+                <span onclick="switchToAdmin()">Я организатор</span>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 2: ВХОД ОРГАНИЗАТОРА -->
+        <div id="admin-login-screen" class="screen hidden">
+            <h1>Панель организатора</h1>
+            <p>Вход для сотрудников Т-Банка и НГТУ</p>
+
+            <div class="input-group">
+                <input type="text" id="admin-username" placeholder="Ваше имя (напр. Стол 1)" />
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="admin-password" placeholder="Пароль администратора" />
+            </div>
+
+            <button onclick="joinQueue('admin')" class="btn-primary">Войти</button>
+
+            <div class="login-footer">
+                <span onclick="switchToUser()">⬅️ Я участник</span>
             </div>
         </div>
 
@@ -53,7 +78,13 @@
 
                 <div class="tg-promo">
                     <p>🔔 Хотите уведомление?</p>
-                    <p>Напишите боту <b id="bot-name">@hahaton123bot</b> ваш номер талона.</p>
+                    <p>Напишите боту:
+                        <!-- Ссылка на Telegram (target="_blank" чтобы не закрывать сайт) -->
+                        <a href="https://t.me/hahaton123bot" target="_blank" class="tg-link">
+                            @hahaton123bot ↗
+                        </a>
+                        <br>ваш номер талона.
+                    </p>
                 </div>
 
                 <div class="status-row">

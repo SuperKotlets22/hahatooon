@@ -1,32 +1,25 @@
-version: '3.8'
-
 services:
-  # Сервис Бэкенда (Go)
+  # Основное Go-приложение
   backend:
-    build:
+    build: 
       context: .
       dockerfile: Dockerfile.backend
-    container_name: t-queue-backend
     ports:
-      - "8080:8080"
-    networks:
-      - t-network
+      - "80:8080"
+    volumes:
+      # Прокидываем файл БД, чтобы данные не терялись
+      - ./tqueue.db:/app/tqueue.db
+    restart: always
 
-  # Сервис Бота (Python)
+  # Телеграм бот
   bot:
     build:
       context: .
       dockerfile: Dockerfile.bot
-    container_name: t-queue-bot
     depends_on:
-      - backend # Бот запустится только после бэкенда
+      - backend
     environment:
-      # Внутри сети Docker мы обращаемся не к localhost, а к имени сервиса (backend)
+      # Внутри Docker сеть работает по именам сервисов
+      # Бот будет стучаться не на localhost, а на "http://backend:8080"
       - GO_SERVER_URL=http://backend:8080
-    networks:
-      - t-network
-
-# Создаем общую сеть для общения контейнеров
-networks:
-  t-network:
-    driver: bridge
+    restart: always
